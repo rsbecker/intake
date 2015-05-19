@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <cextdecs.h(FILE_ALTERLIST_)>
 #include "version.h"
 
 static void usage(char *progname) {
@@ -42,6 +42,21 @@ static char *fromFile = NULL;
 static char *toFile = NULL;
 static bool isVerbose = false;
 static short fileCode = 180;
+
+void setCode(char *name) {
+	short items[] = { 42 };
+	short itemValues[] = { fileCode };
+
+	short error = FILE_ALTERLIST_(name, (short)strlen(name),
+		items, (sizeof(items)/sizeof(items[0])),
+		itemValues, (sizeof(itemValues)/sizeof(itemValues[0]))
+		);
+	if (error != 0) {
+		fprintf(stderr, "Error %d: Unable to set %s file code to %d\n", 
+			error, name, fileCode);
+		exit(1);
+	}
+}
 
 int main(int argc, char **argv) {
 	FILE *source;
@@ -116,6 +131,9 @@ int main(int argc, char **argv) {
 
 	if (isVerbose)
 		fprintf(stderr, "%d bytes transfered from %s to %s\n", total, fromFile, toFile);
+	if (fileCode != 101 && fileCode != 180) {
+		setCode(toNskName);
+	}
 	return 0;
 }
 

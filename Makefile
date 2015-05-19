@@ -2,7 +2,7 @@ MAJOR=1
 MINOR=0
 FIX=0
 COMMIT=$(shell git log -1 --format="%h")
-CFLAGS=
+CFLAGS=-Wextensions
 TARGETS=fromnsk tonsk
 OBJECTS=version.o
 
