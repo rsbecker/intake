@@ -5,7 +5,9 @@
 #include "version.h"
 
 static void usage(char *progname) {
-	fprintf(stderr, "usage: %s [options] from-nsk-file to-oss-file\n", progname);
+	fprintf(stderr, "usage: %s [options] --from=from-nsk-file --to=to-oss-file\n", progname);
+	fprintf(stderr, "          --verbose  turns on logging\n");
+	fprintf(stderr, "          --version  dumps the version and exits\n");
 	exit(1);
 }
 

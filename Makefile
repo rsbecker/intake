@@ -20,4 +20,4 @@ version.cpp: Makefile
 	> version.cpp
 
 clean:
-	rm -f $(TARGETS) $(OBJECTS)
+	rm -f $(TARGETS) $(OBJECTS) version.cpp
