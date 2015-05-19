@@ -3,12 +3,15 @@ MINOR=0
 FIX=0
 COMMIT=$(shell git log -1 --format="%h")
 CFLAGS=
-TARGETS=fromnsk 
+TARGETS=fromnsk tonsk
 OBJECTS=version.o
 
 all: $(TARGETS)
 
 fromnsk: fromnsk.cpp $(OBJECTS)
+	c99 $(CFLAGS) $(OBJECTS) $< -o $@
+
+tonsk: tonsk.cpp $(OBJECTS)
 	c99 $(CFLAGS) $(OBJECTS) $< -o $@
 
 version.o: version.cpp
