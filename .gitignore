@@ -1,4 +1,9 @@
 .intake-mirror
+.git-notifier.dat
+*.o
+*.log
 bob
 fromnsk
 tonsk
+version.cpp
+

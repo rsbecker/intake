@@ -1,26 +1,60 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include "version.h"
 
 static void usage(char *progname) {
-	fprintf(stderr, "usage: %s from-nsk-file to-oss-file\n", progname);
+	fprintf(stderr, "usage: %s [options] from-nsk-file to-oss-file\n", progname);
 	exit(1);
 }
+
+static void version() {
+	printf("Version %s\n", getVersion());
+	exit(0);
+}
+
+static char *fromFile = NULL;
+static char *toFile = NULL;
+static bool isVerbose = false;
 
 int main(int argc, char **argv) {
 	FILE *source;
 	FILE *dest;
 
-	if (argc != 3)
+	if (argc < 2)
 		usage(argv[0]);
 
-	source = fopen(argv[1], "rb");
+	bool isDoingArgs = true;
+
+	for (char **arg = argv+1; *arg; arg++) {
+		if (strncmp(*arg, "--", 2) != 0)
+			isDoingArgs = false;
+
+		if (isDoingArgs) {
+			if (strcmp(*arg, "--version") == 0) {
+				version();
+			} else if (strcmp(*arg, "--verbose") == 0) {
+				isVerbose = true;
+			} else if (strncmp(*arg, "--from=", 7) == 0) {
+				fromFile = (*arg)+7;
+			} else if (strncmp(*arg, "--to=", 5) == 0) {
+				toFile = (*arg)+5;
+			}
+		}
+	}
+
+	if (!fromFile || !toFile)
+		usage(argv[0]);
+
+	source = fopen(fromFile, "rb");
 	if (!source) {
-		perror(argv[1]);
+		perror(fromFile);
 		exit(1);
 	}
-	dest = fopen(argv[2], "wb");
+	dest = fopen(toFile, "wb");
 	if (!dest) {
-		perror(argv[2]);
+		perror(toFile);
 		exit(1);
 	}
 
@@ -37,7 +71,8 @@ int main(int argc, char **argv) {
 	fclose(dest);
 	fclose(source);
 
-	fprintf(stderr, "%d bytes transfered\n", total);
+	if (isVerbose)
+		fprintf(stderr, "%d bytes transfered from %s to %s\n", total, fromFile, toFile);
 	return 0;
 }
 
