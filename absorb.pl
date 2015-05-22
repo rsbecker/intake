@@ -31,21 +31,25 @@ while(<NskMirror>) {
 }
 close(NskMirror);
 
+my @ossnames = ( );
+
 print "Importing ", $subvol, " into ", $workingcache, "\n";
 
 my $githints = $subvol . "/githints";
 my $cachehints = $workingcache . "/githints";
 
 print "Importing githints\n";
+push @ossnames, "githints";
 system("$bindir/fromnsk --from=$githints --to=$cachehints");
 system("touch -r $githints $cachehints");
 system("git add $cachehints");
 
-print "Importing license\n";
-system("$bindir/fromnsk --from=$subvol/license --to=$workingcache/license");
-system("touch -r $subvol/license $workingcache/license");
-system("chmod --reference=$subvol/license $workingcache/license");
-system("git add $workingcache/license");
+print "Importing LICENSE\n";
+push @ossnames, "LICENSE";
+system("$bindir/fromnsk --from=$subvol/license --to=$workingcache/LICENSE");
+system("touch -r $subvol/license $workingcache/LICENSE");
+system("chmod --reference=$subvol/license $workingcache/LICENSE");
+system("git add $workingcache/LICENSE");
 
 open(GitHintsFile, "<", $githints) or die "Missing GITHINTS: $!";
 while(<GitHintsFile>) {
@@ -54,6 +58,7 @@ while(<GitHintsFile>) {
 	my($nskname, $ossname, $filecode) = split / +/, $str;
 	my $fromname = $subvol . "/" . $nskname;
 	my $toname = $workingcache . "/" . $ossname;
+	push @ossnames, $ossname; # Add the known name
 	print "Importing ", $fromname, " to ", $toname, "\n";
 	system("$bindir/fromnsk --from=$fromname --to=$toname");
 	system("touch -r $fromname $toname");
@@ -61,6 +66,22 @@ while(<GitHintsFile>) {
 	system("git add $toname");
 }
 close(GitHintsFile);
+
+# @ossnames contains the list of files that are supposed to be in the package
+my %lookup = map { $_ => 1 } @ossnames;
+opendir my $dir, $workingcache or die "Cannot read $workingcache: $!";
+my @existing = readdir $dir;
+close $dir;
+foreach (@existing) {
+	my $file = $_;
+	if (0 == index($file, '.')) {
+		next;
+	}
+	if (! exists $lookup{$file}) {
+		print "Removing $workingcache/$file no longer in contribution.\n";
+		0 == system("rm $workingcache/$file") or die "Cannot remove $file";
+	}
+}
 
 chdir $workingcache or die "Unable to change to repository: $!";
 system("git status");
