@@ -30,6 +30,7 @@ system("git add $cachehints");
 print "Importing license\n";
 system("$bindir/fromnsk --from=$subvol/license --to=$workingcache/license");
 system("touch -r $subvol/license $workingcache/license");
+system("chmod --reference=$subvol/license $workingcache/license");
 system("git add $workingcache/license");
 
 open(GitHintsFile, "<", $githints) or die "Missing GITHINTS: $!";
@@ -42,6 +43,7 @@ while(<GitHintsFile>) {
 	print "Importing ", $fromname, " to ", $toname, "\n";
 	system("$bindir/fromnsk --from=$fromname --to=$toname");
 	system("touch -r $fromname $toname");
+	system("chmod --reference=$fromname $toname");
 	system("git add $toname");
 }
 close(GitHintsFile);
