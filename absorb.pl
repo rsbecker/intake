@@ -25,6 +25,12 @@ my $cachehints = $workingcache . "/githints";
 print "Importing githints\n";
 system("$bindir/fromnsk --from=$githints --to=$cachehints");
 system("touch -r $githints $cachehints");
+system("git add $cachehints");
+
+print "Importing license\n";
+system("$bindir/fromnsk --from=$subvol/license --to=$workingcache/license");
+system("touch -r $subvol/license $workingcache/license");
+system("git add $workingcache/license");
 
 open(GitHintsFile, "<", $githints) or die "Missing GITHINTS: $!";
 while(<GitHintsFile>) {
@@ -36,5 +42,11 @@ while(<GitHintsFile>) {
 	print "Importing ", $fromname, " to ", $toname, "\n";
 	system("$bindir/fromnsk --from=$fromname --to=$toname");
 	system("touch -r $fromname $toname");
+	system("git add $toname");
 }
 close(GitHintsFile);
+
+chdir $workingcache or die "Unable to change to repository: $!";
+system("git status");
+
+print "Check whether git is ok and then commit\n";
