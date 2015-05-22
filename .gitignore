@@ -1,9 +1,7 @@
-.intake-mirror
 .git-notifier.dat
 *.bak
 *.o
 *.log
-bob
 fromnsk
 tonsk
 version.cpp
