@@ -1,4 +1,18 @@
 #!/usr/bin/perl
+# This software code is owned and operated by Nexbridge Inc. and has been
+# contributed to ITUGLIB. You are free to modify it, providing that you
+# communicate the changes back to Nexbridge Inc. for inclusion into the
+# main code branch. This code is subject to the ECLIPSE Public License
+# and all the rights and obligations contained therein. You must
+# preserve this license file and copyright statements in all copyright
+# notices in source files.
+#
+# This software is provided without waranty or fitness of any kind. You
+# are entirely responsible for any problems that might occur resulting
+# from its use.
+#
+# Copyright (c) 2015 Nexbridge Inc. 
+
 
 use strict;
 use warnings;
