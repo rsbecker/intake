@@ -1,0 +1,6 @@
+This project contains processes and techniques for managing transfers of
+code between NSK and OSS personalities. The project is currently in a
+preliminary proof of concept state and is not certified for fitness in any
+way shape or form. I wouldn't use it.
+
+Maintainer: rsbecker@nexbridge.com
